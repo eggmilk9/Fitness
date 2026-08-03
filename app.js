@@ -330,7 +330,8 @@ async function runAIAnalysis() {
       var res = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
-          'Content-Type': 'Authorization': 'Bearer ' + apiKey
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey
         },
         body: JSON.stringify({
           model: 'gpt-4o-mini',

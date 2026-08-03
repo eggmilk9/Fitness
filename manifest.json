@@ -1,6 +1,6 @@
 {
-  "name": "Fit&Food AI",
-  "short_name": "Fit&Food",
+  "name": "식단과 운동",
+  "short_name": "식단과운동",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Fit&Food AI</title>
+  <title>식단과 운동</title>
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4A90E2">
@@ -11,9 +11,9 @@
 </head>
 <body>
   <div class="app-container">
-    <!-- 상단 헤더 (이모티콘 삭제) -->
+    <!-- 상단 헤더 (식단과 운동으로 수정) -->
     <header class="header">
-      <h1>Fit&Food AI</h1>
+      <h1>식단과 운동</h1>
       <div class="header-btns">
         <button id="calendarBtn" class="icon-btn" type="button">📅</button>
         <button id="profileBtn" class="icon-btn" type="button">⚙️</button>
@@ -57,10 +57,10 @@
 
     <!-- 오늘 날짜 표시 (형식 변경: YYYY년 M월 D일) -->
     <section class="date-section">
-      <h2 id="currentDateDisplay">오늘의 기록</h2>
+      <h2 id="currentDateDisplay"></h2>
     </section>
 
-    <!-- 식단 섹션 ('기록' 텍스트 및 이모티콘 삭제) -->
+    <!-- 식단 섹션 -->
     <section class="card">
       <h2>식단</h2>
       <div class="category-buttons" id="mealCategoryBtns">
@@ -76,7 +76,7 @@
       <ul id="mealList" class="record-list"></ul>
     </section>
 
-    <!-- 운동 섹션 ('기록' 텍스트 및 이모티콘 삭제) -->
+    <!-- 운동 섹션 -->
     <section class="card">
       <h2>운동</h2>
       <div class="category-buttons" id="workoutCategoryBtns">
@@ -94,7 +94,7 @@
     <!-- 점검 및 피드백 버튼 -->
     <button id="analyzeBtn" class="btn-primary btn-large" type="button">✨ AI 분석 및 내일 제안 받기</button>
 
-    <!-- 분석 결과 출력 (이모티콘 삭제) -->
+    <!-- 분석 결과 출력 -->
     <section id="analysisResult" class="card result-card hidden">
       <h2>오늘의 AI 피드백</h2>
       <div id="analysisContent" class="markdown-body"></div>
