@@ -8,7 +8,6 @@ var activeWorkoutCat = '상체';
 var viewYear = new Date().getFullYear();
 var viewMonth = new Date().getMonth();
 
-// 날짜 문자열(YYYY-MM-DD)을 'YYYY년 M월 D일' 형식으로 변환
 function formatDateKorean(dateStr) {
   var parts = dateStr.split('-');
   if (parts.length === 3) {
@@ -316,7 +315,7 @@ async function runAIAnalysis() {
   try {
     var resultText = '';
     if (provider === 'gemini') {
-      var res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + apiKey, {
+      var res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -327,7 +326,7 @@ async function runAIAnalysis() {
       if (data.error) throw new Error(data.error.message);
       resultText = data.candidates[0].content.parts[0].text;
     } else {
-      var res = await fetch('https://api.openai.com/v1/chat/completions', {
+      var res = await fetch('https://api.openai.com/v1,chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
