@@ -149,7 +149,7 @@ body {
   z-index: 1000;
 }
 
-.modal.hidden { display: none; }
+.modal.hidden { display: none !important; }
 
 .modal-content {
   background: white;
@@ -215,4 +215,8 @@ body {
 .result-card {
   line-height: 1.6;
   white-space: pre-line;
+}
+
+.hidden {
+  display: none !important;
 }
