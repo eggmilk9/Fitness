@@ -1,18 +1,28 @@
-// PWA Service Worker 등록
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(function(err) { console.log(err); });
 }
 
-// 상태 변수
 var currentDate = new Date().toISOString().split('T')[0];
 var activeMealCat = '아침';
 var activeWorkoutCat = '상체';
 var viewYear = new Date().getFullYear();
 var viewMonth = new Date().getMonth();
 
+// 날짜 문자열(YYYY-MM-DD)을 'YYYY년 M월 D일' 형식으로 변환
+function formatDateKorean(dateStr) {
+  var parts = dateStr.split('-');
+  if (parts.length === 3) {
+    var year = parts[0];
+    var month = parseInt(parts[1], 10);
+    var day = parseInt(parts[2], 10);
+    return year + '년 ' + month + '월 ' + day + '일';
+  }
+  return dateStr;
+}
+
 function initApp() {
   var dateDisp = document.getElementById('currentDateDisplay');
-  if (dateDisp) dateDisp.textContent = currentDate + ' 기록';
+  if (dateDisp) dateDisp.textContent = formatDateKorean(currentDate);
   
   loadDayData();
   setupCategoryButtons();
@@ -26,7 +36,6 @@ if (document.readyState === 'loading') {
   initApp();
 }
 
-// 카테고리 버튼 설정
 function setupCategoryButtons() {
   var mealBtns = document.querySelectorAll('#mealCategoryBtns .cat-btn');
   mealBtns.forEach(function(btn) {
@@ -47,7 +56,6 @@ function setupCategoryButtons() {
   });
 }
 
-// 로컬 스토리지 데이터 관리
 function getRecords() {
   try {
     return JSON.parse(localStorage.getItem('fitness_records') || '{}');
@@ -60,6 +68,27 @@ function saveRecords(records) {
   localStorage.setItem('fitness_records', JSON.stringify(records));
 }
 
+function deleteMeal(index) {
+  var records = getRecords();
+  if (records[currentDate] && records[currentDate].meals) {
+    records[currentDate].meals.splice(index, 1);
+    saveRecords(records);
+    loadDayData();
+  }
+}
+
+function deleteWorkout(index) {
+  var records = getRecords();
+  if (records[currentDate] && records[currentDate].workouts) {
+    records[currentDate].workouts.splice(index, 1);
+    saveRecords(records);
+    loadDayData();
+  }
+}
+
+window.deleteMeal = deleteMeal;
+window.deleteWorkout = deleteWorkout;
+
 function loadDayData() {
   var records = getRecords();
   var dayData = records[currentDate] || { meals: [], workouts: [], analysis: '' };
@@ -70,14 +99,14 @@ function loadDayData() {
   var analysisContent = document.getElementById('analysisContent');
 
   if (mealList) {
-    mealList.innerHTML = dayData.meals.map(function(m) {
-      return '<li><span>[' + m.cat + '] ' + m.text + '</span></li>';
+    mealList.innerHTML = (dayData.meals || []).map(function(m, idx) {
+      return '<li><span class="record-text">[' + m.cat + '] ' + m.text + '</span><button class="delete-btn" onclick="deleteMeal(' + idx + ')">✕</button></li>';
     }).join('');
   }
 
   if (workoutList) {
-    workoutList.innerHTML = dayData.workouts.map(function(w) {
-      return '<li><span>[' + w.cat + '] ' + w.text + '</span></li>';
+    workoutList.innerHTML = (dayData.workouts || []).map(function(w, idx) {
+      return '<li><span class="record-text">[' + w.cat + '] ' + w.text + '</span><button class="delete-btn" onclick="deleteWorkout(' + idx + ')">✕</button></li>';
     }).join('');
   }
 
@@ -133,7 +162,6 @@ function setupMainButtons() {
   }
 }
 
-// 프로필 및 캘린더 모달
 function setupModals() {
   var pModal = document.getElementById('profileModal');
   var cModal = document.getElementById('calendarModal');
@@ -148,7 +176,7 @@ function setupModals() {
       document.getElementById('userHeight').value = localStorage.getItem('user_height') || '';
       document.getElementById('userWeight').value = localStorage.getItem('user_weight') || '';
       document.getElementById('userMuscle').value = localStorage.getItem('user_muscle') || '';
-      document.getElementById('apiProvider').value = localStorage.getItem('api_provider') || 'openai';
+      document.getElementById('apiProvider').value = localStorage.getItem('api_provider') || 'gemini';
       document.getElementById('apiKey').value = localStorage.getItem('api_key') || '';
       if (pModal) pModal.classList.remove('hidden');
     };
@@ -205,7 +233,6 @@ function setupModals() {
   }
 }
 
-// 캘린더 그리기
 function renderCalendar() {
   var grid = document.getElementById('calendarGrid');
   var monthDisplay = document.getElementById('calendarMonth');
@@ -237,7 +264,7 @@ function renderCalendar() {
       dayDiv.onclick = function() {
         currentDate = targetDate;
         var dateDisp = document.getElementById('currentDateDisplay');
-        if (dateDisp) dateDisp.textContent = currentDate + ' 기록';
+        if (dateDisp) dateDisp.textContent = formatDateKorean(currentDate);
         loadDayData();
         var cModal = document.getElementById('calendarModal');
         if (cModal) cModal.classList.add('hidden');
@@ -248,10 +275,9 @@ function renderCalendar() {
   }
 }
 
-// AI 분석
 async function runAIAnalysis() {
   var apiKey = localStorage.getItem('api_key');
-  var provider = localStorage.getItem('api_provider') || 'openai';
+  var provider = localStorage.getItem('api_provider') || 'gemini';
   var height = localStorage.getItem('user_height') || '미기입';
   var weight = localStorage.getItem('user_weight') || '미기입';
   var muscle = localStorage.getItem('user_muscle') || '미기입';
@@ -289,22 +315,8 @@ async function runAIAnalysis() {
 
   try {
     var resultText = '';
-    if (provider === 'openai') {
-      var res = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + apiKey
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [{ role: 'user', content: prompt }]
-        })
-      });
-      var data = await res.json();
-      resultText = data.choices[0].message.content;
-    } else {
-      var res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey, {
+    if (provider === 'gemini') {
+      var res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + apiKey, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -312,7 +324,22 @@ async function runAIAnalysis() {
         })
       });
       var data = await res.json();
+      if (data.error) throw new Error(data.error.message);
       resultText = data.candidates[0].content.parts[0].text;
+    } else {
+      var res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'Authorization': 'Bearer ' + apiKey
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      var data = await res.json();
+      if (data.error) throw new Error(data.error.message);
+      resultText = data.choices[0].message.content;
     }
 
     if (analysisContent) analysisContent.textContent = resultText;
@@ -320,6 +347,6 @@ async function runAIAnalysis() {
     saveRecords(records);
 
   } catch (err) {
-    if (analysisContent) analysisContent.textContent = '분석 중 오류가 발생했습니다. API 키를 확인해주세요.';
+    if (analysisContent) analysisContent.textContent = '분석 중 오류가 발생했습니다: ' + err.message;
   }
 }

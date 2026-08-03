@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  touch-action: manipulation;
 }
 
 body {
@@ -31,6 +32,7 @@ body {
 .header h1 {
   font-size: 1.4rem;
   color: #2c3e50;
+  font-weight: 700;
 }
 
 .icon-btn {
@@ -69,6 +71,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   color: #666;
+  font-size: 0.95rem;
 }
 
 .cat-btn.active {
@@ -82,12 +85,16 @@ body {
   gap: 8px;
 }
 
+/* iOS 자동 확대 방지를 위해 font-size 16px 이상 필수 */
+.input-group input, .modal-content input, .modal-content select {
+  font-size: 16px !important;
+}
+
 .input-group input {
   flex: 1;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  font-size: 0.9rem;
 }
 
 .btn-sub {
@@ -97,6 +104,7 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 0.95rem;
 }
 
 .btn-primary {
@@ -130,13 +138,29 @@ body {
 }
 
 .record-list li {
-  padding: 8px;
+  padding: 10px;
   background: #f8f9fa;
-  border-radius: 6px;
+  border-radius: 8px;
   margin-bottom: 6px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.record-text {
+  flex: 1;
+  padding-right: 8px;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
 }
 
 .modal {

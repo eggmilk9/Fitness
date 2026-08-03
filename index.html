@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>핏&푸드 AI 다이어리</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fit&Food AI</title>
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4A90E2">
@@ -11,9 +11,9 @@
 </head>
 <body>
   <div class="app-container">
-    <!-- 상단 헤더 -->
+    <!-- 상단 헤더 (이모티콘 삭제) -->
     <header class="header">
-      <h1>💪 Fit&Food AI</h1>
+      <h1>Fit&Food AI</h1>
       <div class="header-btns">
         <button id="calendarBtn" class="icon-btn" type="button">📅</button>
         <button id="profileBtn" class="icon-btn" type="button">⚙️</button>
@@ -23,15 +23,15 @@
     <!-- 프로필 / API 키 설정 모달 -->
     <div id="profileModal" class="modal hidden">
       <div class="modal-content">
-        <h3>👤 신체 정보 및 API 설정</h3>
+        <h3>신체 정보 및 API 설정</h3>
         <label>키 (cm): <input type="number" id="userHeight" placeholder="175"></label>
         <label>몸무게 (kg): <input type="number" id="userWeight" placeholder="70"></label>
         <label>근육량 (kg): <input type="number" id="userMuscle" placeholder="30"></label>
         <hr>
         <label>AI 제공자: 
           <select id="apiProvider">
-            <option value="openai">OpenAI (GPT-4o-mini)</option>
             <option value="gemini">Google Gemini</option>
+            <option value="openai">OpenAI (GPT-4o-mini)</option>
           </select>
         </label>
         <label>API Key: <input type="password" id="apiKey" placeholder="API 키 입력"></label>
@@ -55,14 +55,14 @@
       </div>
     </div>
 
-    <!-- 오늘 날짜 표시 -->
+    <!-- 오늘 날짜 표시 (형식 변경: YYYY년 M월 D일) -->
     <section class="date-section">
       <h2 id="currentDateDisplay">오늘의 기록</h2>
     </section>
 
-    <!-- 식단 섹션 -->
+    <!-- 식단 섹션 ('기록' 텍스트 및 이모티콘 삭제) -->
     <section class="card">
-      <h2>🥗 식단 기록</h2>
+      <h2>식단</h2>
       <div class="category-buttons" id="mealCategoryBtns">
         <button class="cat-btn active" data-cat="아침" type="button">아침</button>
         <button class="cat-btn" data-cat="점심" type="button">점심</button>
@@ -71,14 +71,14 @@
       </div>
       <div class="input-group">
         <input type="text" id="mealInput" placeholder="예: 닭가슴살 100g, 현미밥 1공기, 계란 2개">
-        <button id="saveMealBtn" class="btn-sub" type="button">기록</button>
+        <button id="saveMealBtn" class="btn-sub" type="button">등록</button>
       </div>
       <ul id="mealList" class="record-list"></ul>
     </section>
 
-    <!-- 운동 섹션 -->
+    <!-- 운동 섹션 ('기록' 텍스트 및 이모티콘 삭제) -->
     <section class="card">
-      <h2>🏋️ 운동 기록</h2>
+      <h2>운동</h2>
       <div class="category-buttons" id="workoutCategoryBtns">
         <button class="cat-btn active" data-cat="상체" type="button">상체</button>
         <button class="cat-btn" data-cat="하체" type="button">하체</button>
@@ -86,7 +86,7 @@
       </div>
       <div class="input-group">
         <input type="text" id="workoutInput" placeholder="예: 푸시업 20회 3세트, 스쿼트 30회 4세트">
-        <button id="saveWorkoutBtn" class="btn-sub" type="button">기록</button>
+        <button id="saveWorkoutBtn" class="btn-sub" type="button">등록</button>
       </div>
       <ul id="workoutList" class="record-list"></ul>
     </section>
@@ -94,9 +94,9 @@
     <!-- 점검 및 피드백 버튼 -->
     <button id="analyzeBtn" class="btn-primary btn-large" type="button">✨ AI 분석 및 내일 제안 받기</button>
 
-    <!-- 분석 결과 출력 -->
+    <!-- 분석 결과 출력 (이모티콘 삭제) -->
     <section id="analysisResult" class="card result-card hidden">
-      <h2>📊 오늘의 AI 피드백</h2>
+      <h2>오늘의 AI 피드백</h2>
       <div id="analysisContent" class="markdown-body"></div>
     </section>
   </div>
